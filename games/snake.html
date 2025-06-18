@@ -87,9 +87,29 @@
   #restart-btn:hover {
     background: #1e40af;
   }
+
+  .back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #2563eb;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: background 0.2s ease;
+    z-index: 999;
+  }
+
+  .back-btn:hover {
+    background-color: #1e40af;
+  }
 </style>
 </head>
 <body>
+  <a href="../index.html" class="back-btn">← Back</a>
   <h1>Snake Game</h1>
   <div id="event-banner"></div>
   <div id="game-container">
