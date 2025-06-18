@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaz's Website</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1e1e2f, #2d2d44);
+      color: white;
+      min-height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .welcome {
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 400px;
+      width: 100%;
+      margin-bottom: 3rem;
+    }
+
+    .links a {
+      text-decoration: none;
+      background: #3b82f6;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .links a:hover {
+      background: #2563eb;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.6);
+    }
+
+    .games-section {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      padding: 1rem 0;
+    }
+
+    .game-card {
+      background: #2f2f44;
+      border-radius: 15px;
+      box-shadow:
+        0 2px 5px rgba(0,0,0,0.2),
+        0 8px 20px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .game-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.4),
+        0 16px 40px rgba(59, 130, 246, 0.7);
+    }
+
+    .game-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #60a5fa;
+    }
+
+    .play-btn {
+      text-align: center;
+      background: #2563eb;
+      color: white;
+      padding: 0.8rem 0;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .play-btn:hover {
+      background: #1e40af;
+      box-shadow: 0 10px 25px rgba(30, 64, 175, 0.7);
+    }
+
+    @media (max-width: 500px) {
+      .welcome {
+        font-size: 2rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .links a {
+        font-size: 1rem;
+        padding: 0.8rem;
+      }
+
+      .game-title {
+        font-size: 1.2rem;
+      }
+
+      .play-btn {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome">WELCOME TO KAZ'S WEBSITE</div>
+
+  <h1>Kaz's Socials</h1>
+  <div class="links">
+    <a href="https://www.tiktok.com/@im_bored_tiktok" target="_blank">TikTok</a>
+    <a href="https://discord.com/users/437346641880678400" target="_blank">Discord</a>
+  </div>
+
+  <div class="games-section">
+    <h1>Games</h1>
+    <div class="games-grid">
+      <div class="game-card">
+        <div class="game-title">Clicker Game</div>
+        <a class="play-btn" href="games/clicker.html">Play</a>
+      </div>
+      <div class="game-card">
+        <div class="game-title">Snake Game</div>
+        <a class="play-btn" href="games/snake.html">Play</a>
+      </div>
+      <!-- Add more game cards here -->
+    </div>
+  </div>
+</body>
+</html>

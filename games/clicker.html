@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Clicker Game with Rebirths</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+  body {
+    margin: 0;
+    background: #0f172a;
+    color: #e0e7ff;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #60a5fa;
+    user-select: none;
+  }
+
+  #score, #rebirths, #superRebirths {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+    color: #facc15;
+    user-select: none;
+  }
+
+  #click-btn {
+    background: #2563eb;
+    border: none;
+    padding: 1rem 3rem;
+    border-radius: 14px;
+    font-size: 1.4rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.6);
+    user-select: none;
+    transition: background 0.3s ease;
+    margin-top: 1rem;
+  }
+
+  #click-btn:hover {
+    background: #1e40af;
+  }
+
+  #upgrades {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 520px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+
+  .upgrade-btn {
+    background: #1e40af;
+    border-radius: 12px;
+    padding: 1rem;
+    color: #e0e7ff;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+
+  .upgrade-btn:hover {
+    background: #2563eb;
+  }
+
+  .upgrade-name {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    text-align: center;
+  }
+
+  .upgrade-cost {
+    font-size: 0.9rem;
+    color: #a5b4fc;
+    margin-bottom: 0.25rem;
+  }
+
+  .upgrade-count {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #facc15;
+  }
+
+  #rebirth-btn, #super-rebirth-btn {
+    background: #dc2626;
+    border: none;
+    border-radius: 14px;
+    padding: 0.8rem 2rem;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.7);
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+
+  #rebirth-btn:disabled, #super-rebirth-btn:disabled {
+    background: #7f1d1d;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  #rebirth-btn:hover:not(:disabled) {
+    background: #991b1b;
+  }
+
+  #super-rebirth-btn:hover:not(:disabled) {
+    background: #b91c1c;
+  }
+
+  #info {
+    margin-top: 1.5rem;
+    max-width: 520px;
+    font-size: 0.95rem;
+    color: #94a3b8;
+    user-select: none;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>Clicker Game</h1>
+<div id="score">Score: 0</div>
+<div id="rebirths">Rebirths: 0</div>
+<div id="superRebirths">Super Rebirths: 0</div>
+<button id="click-btn">Click Me!</button>
+
+<div id="upgrades"></div>
+
+<button id="rebirth-btn" disabled>Rebirth (Req: 10k score)</button>
+<button id="super-rebirth-btn" disabled>Super Rebirth (Req: 10 rebirths)</button>
+
+<div id="info">
+  Buy upgrades to increase clicks! Rebirth to reset and gain permanent multipliers. Super Rebirth after 10 rebirths for massive boosts!
+</div>
+
+<script>
+  // Utility: format big numbers to k, M, B etc.
+  function formatNum(num) {
+    if (num < 1000) return num.toFixed(0);
+    const units = ['k', 'M', 'B', 'T', 'Qa', 'Qi'];
+    let unitIndex = -1;
+    let n = num;
+    while(n >= 1000 && unitIndex < units.length - 1) {
+      n /= 1000;
+      unitIndex++;
+    }
+    return n.toFixed(2).replace(/\.00$/, '') + units[unitIndex];
+  }
+
+  let score = 0;
+  let clickPower = 1;
+  let autoClickers = 0;
+  let multiplier = 1;
+  let rebirthCount = 0;
+  let superRebirthCount = 0;
+
+  // Rebirth cost formula: grows exponentially
+  function rebirthCost() {
+    return 10000 * Math.pow(3, rebirthCount); // base 10k, x3 per rebirth
+  }
+
+  // Super rebirth cost formula
+  function superRebirthCost() {
+    return 10 * Math.pow(5, superRebirthCount); // base 10 rebirths, x5 per super rebirth
+  }
+
+  // Upgrade definitions with lowered effects and costs
+  const upgrades = [
+    {
+      id: 'autoClicker',
+      name: 'Auto-Clicker',
+      baseCost: 500,
+      count: 0,
+      cost() { return Math.floor(this.baseCost * Math.pow(1.18, this.count)); },
+      effectDesc: 'Clicks automatically every second.',
+      buy() {
+        if (score >= this.cost()) {
+          score -= this.cost();
+          this.count++;
+          autoClickers++;
+          updateAll();
+        }
+      }
+    },
+    {
+      id: 'multiplier',
+      name: 'Multiplier',
+      baseCost: 1500,
+      count: 0,
+      cost() { return Math.floor(this.baseCost * Math.pow(1.28, this.count)); },
+      effectDesc: 'Multiplies click power.',
+      buy() {
+        if (score >= this.cost()) {
+          score -= this.cost();
+          this.count++;
+          multiplier *= 1.3;
+          updateAll();
+        }
+      }
+    },
+    {
+      id: 'clickPower',
+      name: 'Click Power',
+      baseCost: 100,
+      count: 0,
+      cost() { return Math.floor(this.baseCost * Math.pow(1.15, this.count)); },
+      effectDesc: 'Increases points per click.',
+      buy() {
+        if (score >= this.cost()) {
+          score -= this.cost();
+          this.count++;
+          clickPower += 1;
+          updateAll();
+        }
+      }
+    },
+    {
+      id: 'superAutoClicker',
+      name: 'Super Auto-Clicker',
+      baseCost: 2500,
+      count: 0,
+      cost() { return Math.floor(this.baseCost * Math.pow(1.17, this.count)); },
+      effectDesc: 'Auto-clicks 5 times per second!',
+      buy() {
+        if (score >= this.cost()) {
+          score -= this.cost();
+          this.count++;
+          autoClickers += 5;
+          updateAll();
+        }
+      }
+    },
+    {
+      id: 'megaMultiplier',
+      name: 'Mega Multiplier',
+      baseCost: 5000,
+      count: 0,
+      cost() { return Math.floor(this.baseCost * Math.pow(1.30, this.count)); },
+      effectDesc: 'Increases multiplier by x2!',
+      buy() {
+        if (score >= this.cost()) {
+          score -= this.cost();
+          this.count++;
+          multiplier *= 2;
+          updateAll();
+        }
+      }
+    },
+    {
+      id: 'clickStorm',
+      name: 'Click Storm',
+      baseCost: 8000,
+      count: 0,
+      cost() { return Math.floor(this.baseCost * Math.pow(1.25, this.count)); },
+      effectDesc: 'Each click adds +5 points!',
+      buy() {
+        if (score >= this.cost()) {
+          score -= this.cost();
+          this.count++;
+          clickPower += 5;
+          updateAll();
+        }
+      }
+    },
+    {
+      id: 'autoMultiplier',
+      name: 'Auto Multiplier',
+      baseCost: 12000,
+      count: 0,
+      cost() { return Math.floor(this.baseCost * Math.pow(1.27, this.count)); },
+      effectDesc: 'Auto-clicks have x2 multiplier!',
+      buy() {
+        if (score >= this.cost()) {
+          score -= this.cost();
+          this.count++;
+          // This increases multiplier for auto clicks only
+          autoMultiplier += 1;
+          updateAll();
+        }
+      }
+    }
+  ];
+
+  let autoMultiplier = 0; // counts how many autoMultiplier upgrades bought
+
+  const scoreEl = document.getElementById('score');
+  const rebirthsEl = document.getElementById('rebirths');
+  const superRebirthsEl = document.getElementById('superRebirths');
+  const clickBtn = document.getElementById('click-btn');
+  const upgradesContainer = document.getElementById('upgrades');
+  const rebirthBtn = document.getElementById('rebirth-btn');
+  const superRebirthBtn = document.getElementById('super-rebirth-btn');
+
+  function updateScore() {
+    scoreEl.textContent = `Score: ${formatNum(score)}`;
+  }
+  function updateRebirths() {
+    rebirthsEl.textContent = `Rebirths: ${rebirthCount}`;
+    rebirthBtn.textContent = `Rebirth (Req: ${formatNum(rebirthCost())} score)`;
+    rebirthBtn.disabled = score < rebirthCost();
+  }
+  function updateSuperRebirths() {
+    superRebirthsEl.textContent = `Super Rebirths: ${superRebirthCount}`;
+    superRebirthBtn.textContent = `Super Rebirth (Req: ${formatNum(superRebirthCost())} rebirths)`;
+    superRebirthBtn.disabled = rebirthCount < superRebirthCost();
+  }
+
+  function updateUpgrades() {
+    upgradesContainer.innerHTML = '';
+    upgrades.forEach(upg => {
+      const btn = document.createElement('button');
+      btn.classList.add('upgrade-btn');
+      btn.innerHTML = `
+        <div class="upgrade-name">${upg.name}</div>
+        <div class="upgrade-cost">Cost: ${formatNum(upg.cost())}</div>
+        <div class="upgrade-count">Owned: ${upg.count}</div>
+      `;
+      btn.title = upg.effectDesc;
+      btn.onclick = () => {
+        upg.buy();
+      };
+      upgradesContainer.appendChild(btn);
+    });
+  }
+
+  function updateAll() {
+    updateScore();
+    updateRebirths();
+    updateSuperRebirths();
+    updateUpgrades();
+  }
+
+  // Click handler
+  clickBtn.onclick = () => {
+    let pointsGained = clickPower * multiplier;
+    score += pointsGained;
+    updateAll();
+  };
+
+  // Auto click every 1 second
+  setInterval(() => {
+    if (autoClickers > 0) {
+      // Auto clicks affected by autoMultiplier upgrades
+      let autoPoints = autoClickers * clickPower * multiplier * (1 + autoMultiplier);
+      score += autoPoints;
+      updateAll();
+    }
+  }, 1000);
+
+  // Rebirth resets progress but adds permanent multiplier boost
+  rebirthBtn.onclick = () => {
+    if (score >= rebirthCost()) {
+      rebirthCount++;
+      // multiplier bonus for rebirth: 1.2x per rebirth, multiplicative with upgrades
+      multiplier *= 1.2;
+      resetProgress();
+      updateAll();
+    }
+  };
+
+  // Super rebirth resets progress + rebirths but gives massive multiplier
+  superRebirthBtn.onclick = () => {
+    if (rebirthCount >= superRebirthCost()) {
+      superRebirthCount++;
+      // Reset rebirths and multiplier, add massive multiplier boost
+      multiplier = Math.pow(5, superRebirthCount);
+      rebirthCount = 0;
+      resetProgress();
+      updateAll();
+    }
+  };
+
+  // Reset score and upgrades, keep multiplier & rebirth counts
+  function resetProgress() {
+    score = 0;
+    clickPower = 1;
+    autoClickers = 0;
+    autoMultiplier = 0;
+    // Reset all upgrade counts:
+    upgrades.forEach(u => u.count = 0);
+  }
+
+  updateAll();
+</script>
+
+</body>
+</html>
