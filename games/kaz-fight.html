@@ -1,173 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kaz Fight Simulator</title>
-  <style>
-    body {
-      background: #0f172a;
-      color: #e0e7ff;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    h1 {
-      color: #60a5fa;
-      margin-bottom: 1rem;
-    }
-    #log {
-      background: #1e293b;
-      padding: 1rem;
-      border-radius: 10px;
-      max-width: 400px;
-      width: 100%;
-      height: 200px;
-      overflow-y: auto;
-      margin-top: 1rem;
-      font-size: 0.9rem;
-    }
-    button {
-      background: #2563eb;
-      border: none;
-      padding: 0.7rem 1.5rem;
-      margin: 0.5rem;
-      border-radius: 12px;
-      color: white;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #1e40af;
-    }
-    #kaz, #enemy {
-      font-size: 2.5rem;
-      margin: 1rem;
-      transition: transform 0.1s ease;
-    }
-    .hit {
-      transform: scale(1.2);
-    }
-    #back-btn {
-      background: #2563eb;
-      border: none;
-      padding: 0.7rem 2rem;
-      margin: 1rem;
-      border-radius: 12px;
-      color: white;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
-      transition: background 0.3s ease;
-    }
-    #back-btn:hover {
-      background: #1e40af;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaz Fight Simulator</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+  h1 {
+    color: #60a5fa;
+    margin-bottom: 1rem;
+  }
+  #game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    background: #1e293b;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .stats {
+    display: flex;
+    gap: 1.5rem;
+    font-weight: bold;
+  }
+  .actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+  }
+  button {
+    background: #2563eb;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #1e40af;
+  }
+  .hidden {
+    display: none;
+  }
+  .store {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .store button {
+    background: #059669;
+  }
+  .store button:hover {
+    background: #047857;
+  }
+  .powerup-info {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    color: #facc15;
+  }
+</style>
 </head>
 <body>
-  <h1>Kaz Fight Simulator</h1>
-  <div id="kaz">🧍 Kaz</div>
-  <div id="enemy">💀 Enemy</div>
-  <div>
-    <button id="attack-btn">Attack</button>
-    <button id="heal-btn">Heal</button>
-    <button id="restart-btn" style="display: none;">Restart Game</button>
+<h1>Kaz Fight Simulator</h1>
+<div id="game-container">
+  <div class="stats">
+    <div>Kaz HP: <span id="kaz-hp">100</span></div>
+    <div>Enemy HP: <span id="enemy-hp">100</span></div>
+    <div>Coins: <span id="coins">0</span></div>
   </div>
-  <div id="log"></div>
-  <button id="back-btn" onclick="location.href='../index.html'">Back to Home</button>
+  <div class="actions">
+    <button id="attack-btn">Attack</button>
+    <button id="restart-btn" class="hidden">Restart</button>
+    <button onclick="location.href='../index.html'">Back to Home</button>
+  </div>
+  <div class="store">
+    <button onclick="buyUpgrade('attack')">Upgrade Attack (10 coins)</button>
+    <button onclick="buyPowerup('berserk', 5, 5000)">Berserk (x2 dmg, 5s - 25 coins)</button>
+    <button onclick="buyPowerup('regen', 5, 5000)">Regeneration (+3hp/s, 5s - 25 coins)</button>
+  </div>
+  <div class="powerup-info" id="powerup-status"></div>
+</div>
+<script>
+let kazHP = 100;
+let enemyHP = 100;
+let coins = 0;
+let baseDamage = 10;
+let currentPowerup = null;
+let powerupTimer = 0;
+const kazHPText = document.getElementById("kaz-hp");
+const enemyHPText = document.getElementById("enemy-hp");
+const coinsText = document.getElementById("coins");
+const powerupStatus = document.getElementById("powerup-status");
 
-  <script>
-    let kazHP = 100;
-    let enemyHP = 100;
-    let coins = 0;
+function updateStats() {
+  kazHPText.textContent = kazHP;
+  enemyHPText.textContent = enemyHP;
+  coinsText.textContent = coins;
+}
 
-    const kazDiv = document.getElementById("kaz");
-    const enemyDiv = document.getElementById("enemy");
-    const attackBtn = document.getElementById("attack-btn");
-    const healBtn = document.getElementById("heal-btn");
-    const restartBtn = document.getElementById("restart-btn");
-    const logDiv = document.getElementById("log");
+function enemyAttack() {
+  if (enemyHP <= 0 || kazHP <= 0) return;
+  kazHP -= 5;
+  if (kazHP <= 0) {
+    kazHP = 0;
+    document.getElementById("restart-btn").classList.remove("hidden");
+  }
+  updateStats();
+}
 
-    function log(message) {
-      const entry = document.createElement("div");
-      entry.textContent = message;
-      logDiv.appendChild(entry);
-      logDiv.scrollTop = logDiv.scrollHeight;
+function attack() {
+  if (kazHP <= 0 || enemyHP <= 0) return;
+  let damage = baseDamage;
+  if (currentPowerup === 'berserk') damage *= 2;
+  enemyHP -= damage;
+  if (enemyHP <= 0) {
+    enemyHP = 100;
+    kazHP = Math.min(kazHP + 10, 100);
+    coins += 10;
+  }
+  updateStats();
+  enemyAttack();
+}
+
+document.getElementById("attack-btn").onclick = attack;
+
+document.getElementById("restart-btn").onclick = () => {
+  kazHP = 100;
+  enemyHP = 100;
+  coins = 0;
+  currentPowerup = null;
+  baseDamage = 10;
+  document.getElementById("restart-btn").classList.add("hidden");
+  updateStats();
+  powerupStatus.textContent = '';
+};
+
+function buyUpgrade(type) {
+  if (type === 'attack' && coins >= 10) {
+    coins -= 10;
+    baseDamage += 5;
+    updateStats();
+  }
+}
+
+function buyPowerup(type, cost, duration) {
+  if (coins < cost || currentPowerup) return;
+  coins -= cost;
+  currentPowerup = type;
+  powerupTimer = duration / 1000;
+  powerupStatus.textContent = `${type === 'berserk' ? 'Berserk (x2 Damage)' : 'Regeneration (+3 HP/s)'} - ${powerupTimer}s`;
+  updateStats();
+  if (type === 'regen') {
+    const regenInterval = setInterval(() => {
+      if (kazHP < 100 && powerupTimer > 0) kazHP = Math.min(kazHP + 3, 100);
+      updateStats();
+    }, 1000);
+    setTimeout(() => clearInterval(regenInterval), duration);
+  }
+  const powerupInterval = setInterval(() => {
+    powerupTimer--;
+    if (powerupTimer > 0) {
+      powerupStatus.textContent = `${type === 'berserk' ? 'Berserk (x2 Damage)' : 'Regeneration (+3 HP/s)'} - ${powerupTimer}s`;
+    } else {
+      clearInterval(powerupInterval);
+      currentPowerup = null;
+      powerupStatus.textContent = '';
     }
+  }, 1000);
+}
 
-    function updateVisuals() {
-      kazDiv.textContent = `🧍 Kaz (${kazHP} HP)`;
-      enemyDiv.textContent = `💀 Enemy (${enemyHP} HP)`;
-    }
-
-    function hitAnimation(target) {
-      target.classList.add("hit");
-      setTimeout(() => target.classList.remove("hit"), 100);
-    }
-
-    function attack() {
-      const damage = Math.floor(Math.random() * 15) + 5;
-      enemyHP -= damage;
-      log(`Kaz dealt ${damage} damage.`);
-      hitAnimation(enemyDiv);
-      if (enemyHP <= 0) {
-        log("Enemy defeated! +10 coins");
-        coins += 10;
-        enemyHP = 100;
-      }
-      enemyAttack();
-      updateVisuals();
-    }
-
-    function heal() {
-      if (coins < 5) {
-        log("Not enough coins to heal.");
-        return;
-      }
-      coins -= 5;
-      const healAmount = Math.floor(Math.random() * 20) + 10;
-      kazHP = Math.min(100, kazHP + healAmount);
-      log(`Kaz healed ${healAmount} HP.`);
-      updateVisuals();
-    }
-
-    function enemyAttack() {
-      const damage = Math.floor(Math.random() * 10) + 5;
-      kazHP -= damage;
-      log(`Enemy dealt ${damage} damage.`);
-      hitAnimation(kazDiv);
-      if (kazHP <= 0) {
-        log("Kaz has been defeated...");
-        attackBtn.disabled = true;
-        healBtn.disabled = true;
-        restartBtn.style.display = "inline-block";
-      }
-    }
-
-    function startGame() {
-      kazHP = 100;
-      enemyHP = 100;
-      coins = 0;
-      logDiv.innerHTML = "";
-      attackBtn.disabled = false;
-      healBtn.disabled = false;
-      restartBtn.style.display = "none";
-      updateVisuals();
-    }
-
-    attackBtn.onclick = attack;
-    healBtn.onclick = heal;
-    restartBtn.onclick = startGame;
-
-    startGame();
-  </script>
+updateStats();
+</script>
 </body>
 </html>
