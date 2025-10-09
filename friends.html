@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Friends</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+  h1 {
+    color: #60a5fa;
+    margin-bottom: 1rem;
+  }
+  .friends-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 900px;
+  }
+  .friend-card {
+    background: #1e293b;
+    border: 2px solid #38bdf8;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .friend-card:hover {
+    background: #334155;
+    transform: translateY(-3px);
+  }
+  .friend-name {
+    font-size: 1.3rem;
+    color: #60a5fa;
+    font-weight: bold;
+  }
+  .friend-link {
+    display: inline-block;
+    margin: 0.5rem 0;
+    color: #38bdf8;
+    text-decoration: none;
+  }
+  .friend-link:hover {
+    text-decoration: underline;
+  }
+  .friend-desc {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+  }
+  #back-btn {
+    background: #2563eb;
+    border: none;
+    padding: 0.7rem 2rem;
+    margin: 2rem 0 0;
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+    transition: background 0.3s ease;
+  }
+  #back-btn:hover {
+    background: #1e40af;
+  }
+</style>
+</head>
+<body>
+  <h1>My Friends</h1>
+  <div class="friends-container" id="friends-list"></div>
+  <button id="back-btn" onclick="location.href='index.html'">Back to Home</button>
+
+  <script>
+    // 🧠 Edit this list to add or remove friends
+    const friends = [
+      {
+        name: "Nash",
+        link: "", // optional
+        reason: "Cuz its obv like what (this is the only person thats in order this person my top 1 but everything after this is NOT in order)"
+      },
+      {
+        name: "Leon",
+        link: "", // no link
+        reason: "Cuz its leon like he js him yk"
+      },
+      {
+        name: "Lyric",
+        link: "",
+        reason: "Lyric my boy"
+      },
+      {
+        name: "Mj",
+        link: "",
+        reason: "He always targetting me but like he a good friend ig"
+      },
+      {
+        name: "3adel",
+        link: "",
+        reason: "3adel IS HIM BRO" // leave blank if you don’t want to say anything
+      },
+      {
+        name: "Roofa",
+        link: "",
+        reason: "Roofa my guy"
+      },
+      {
+        name: "Hash",
+        link: "",
+        reason: "Hash is Hash like hes always been peak"
+      },
+      {
+        name: "Yuina",
+        link: "",
+        reason: "Shes kind and caring"
+      },
+      {
+        name: "Pizza",
+        link: "",
+        reason: "A GOATED DAMN PERSON BRO LIKE WHAT PIZZA IS PEAK NO ONE CAN SAY OTHERWISE"
+      },
+      {
+        name: "Wopper",
+        link: "",
+        reason: "We dont talk much but hes still a good friend"
+      },
+      {
+        name: "Yumi",
+        link: "",
+        reason: "Goated"
+      },
+      {
+        name: "Envy",
+        link: "",
+        reason: "Weird but like still love him"
+      },
+      {
+        name: "707",
+        link: "",
+        reason: "Annoying but hes like cool"
+      },
+      {
+        name: "AMROOOOO",
+        link: "",
+        reason: "AMRRO IS SOOOO GOATED I WANNA RUB HIS BELLLY"
+      },
+      {
+        name: "",
+        link: "",
+        reason: ""
+      },
+    ];
+
+    const container = document.getElementById("friends-list");
+
+    friends.forEach(friend => {
+      const card = document.createElement("div");
+      card.className = "friend-card";
+      
+      const name = document.createElement("div");
+      name.className = "friend-name";
+      name.textContent = friend.name;
+      card.appendChild(name);
+
+      if (friend.link) {
+        const link = document.createElement("a");
+        link.href = friend.link;
+        link.textContent = "View Profile";
+        link.className = "friend-link";
+        link.target = "_blank";
+        card.appendChild(link);
+      }
+
+      if (friend.reason) {
+        const reason = document.createElement("div");
+        reason.className = "friend-desc";
+        reason.textContent = friend.reason;
+        card.appendChild(reason);
+      }
+
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>
