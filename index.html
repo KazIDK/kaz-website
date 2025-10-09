@@ -5,6 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kaz's Website</title>
   <style>
+  /* Friends Section */
+  .friends-section {
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  .friends-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .friend-card {
+    background: #1e293b;
+    border: 2px solid #38bdf8;
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 220px;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .friend-card:hover {
+    background: #334155;
+    transform: translateY(-5px);
+  }
+
+  .friend-title {
+    font-size: 1.2rem;
+    color: #60a5fa;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .view-btn {
+    background: #2563eb;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .view-btn:hover {
+    background: #1e40af;
+  }
+</style>
+  <style>
     * {
       margin: 0;
       padding: 0;
