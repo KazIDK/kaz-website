@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Access Point</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: monospace;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .glitch {
+            font-size: 24px;
+            letter-spacing: 1px;
+            animation: glitch 2s infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 red; }
+            20% { text-shadow: -2px 0 cyan; }
+            40% { text-shadow: 2px 0 magenta; }
+            60% { text-shadow: -2px 0 yellow; }
+            80% { text-shadow: 1px 0 purple; }
+            100% { text-shadow: 0 0 white; }
+        }
+
+        #clue {
+            display: none;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        #pButton {
+            font-size: 20px;
+            padding: 12px 20px;
+            background: #111;
+            border: 1px solid #666;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: 0.2s;
+        }
+
+        #pButton:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glitch">
+        ACCESS POINT :: LEVEL 2  
+        UNAUTHORIZED ENTRY DETECTED  
+    </div>
+
+    <p style="opacity:0.6;margin-top:25px;">
+        system anomaly...  
+        reality distortion...  
+        <br>  
+        <span style="opacity:0.3;">the pizza guardian is watching</span>
+    </p>
+
+    <button id="pButton">REVEAL SIGNAL</button>
+
+    <p id="clue">
+        signal acquired.<br><br>
+        proceed to the pizza shrine in the roblox domain.<br>
+        access code: <strong>7 - 2 - 5</strong><br><br>
+        do not make another mistake.
+    </p>
+
+    <script>
+        document.getElementById("pButton").onclick = function() {
+            document.getElementById("clue").style.display = "block";
+        };
+    </script>
+
+</body>
+</html>
