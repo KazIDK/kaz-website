@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LEVEL 4 :: Verification</title>
+
+    <style>
+        body {
+            background: #0c0c0c;
+            color: #e6e6e6;
+            font-family: monospace;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .box {
+            background: #111;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 0 10px #000;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            background: #222;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        #result {
+            margin-top: 25px;
+            font-size: 18px;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>LEVEL 4 :: MEMORY CHAMBER</h2>
+
+    <p style="opacity:0.8;">
+        “Will u forever be friends with me”  
+        <br><br>
+        provide the keyword below in all lowercase.
+    </p>
+
+    <!-- 
+        CHANGE THE ANSWER HERE !!
+        Default answer = "drive"
+    -->
+    <script>
+        const correctAnswer = "yes";  
+        // Change "drive" to anything you want later!
+    </script>
+
+    <input type="text" id="answer" placeholder="enter keyword...">
+    <button onclick="checkAnswer()">submit</button>
+
+    <p id="result"></p>
+</div>
+
+<script>
+    function checkAnswer() {
+        const user = document.getElementById("answer").value.trim().toLowerCase();
+        const result = document.getElementById("result");
+
+        if (user === correctAnswer) {
+            result.style.color = "#6aff6a";
+            result.innerHTML = "ACCESS GRANTED 🎉\nYou found it.\n\nHere is your final archive:\n\n" +
+            "<a href='YOUR_GOOGLE_DRIVE_LINK' target='_blank' style='color:#9acdff;'>Open Final File</a>";
+        } else {
+            result.style.color = "#ff6a6a";
+            result.innerHTML = "ACCESS DENIED ❌\nIncorrect keyword.";
+        }
+    }
+</script>
+
+</body>
+</html>
