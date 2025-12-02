@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Power's Ultimate Dumbass Quiz</title>
+<style>
+    body {
+        background: #1b1b1b;
+        color: #f2dcdc;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 40px;
+    }
+
+    h1 {
+        color: #ff4d4d;
+        font-size: 40px;
+        text-shadow: 0 0 5px #ff0000;
+    }
+
+    .stage {
+        display: none;
+        margin-top: 30px;
+        padding: 20px;
+        background: #2c2c2c;
+        border: 2px solid #ff4d4d;
+        border-radius: 12px;
+    }
+
+    button {
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        margin: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #ff2b2b;
+    }
+
+    #final-link {
+        margin-top: 40px;
+        display: none;
+        font-size: 22px;
+        color: #b6ffb6;
+    }
+</style>
+</head>
+<body>
+
+<h1>🔪 Power’s STUPID Quiz 🔪</h1>
+<p>Power ate the next clue. Answer her questions to make her spit it out.</p>
+
+<!-- STAGE 1 -->
+<div id="stage1" class="stage">
+    <h2>Question 1:</h2>
+    <p>“WHO is the greatest being in all of existence?!”</p>
+    <button onclick="check(1, 'correct')">Power</button>
+    <button onclick="check(1, 'wrong')">Denji</button>
+    <button onclick="check(1, 'wrong')">Makima</button>
+</div>
+
+<!-- STAGE 2 -->
+<div id="stage2" class="stage">
+    <h2>Question 2:</h2>
+    <p>“What is the MOST divine food known to mortals?!”</p>
+    <button onclick="check(2, 'correct')">Meat</button>
+    <button onclick="check(2, 'wrong')">Vegetables 🤢</button>
+    <button onclick="check(2, 'wrong')">Sushi</button>
+</div>
+
+<!-- STAGE 3 -->
+<div id="stage3" class="stage">
+    <h2>Question 3:</h2>
+    <p>“What does Denji love more than ANYTHING?”</p>
+    <button onclick="check(3, 'wrong')">Money</button>
+    <button onclick="check(3, 'correct')">Pochita</button>
+    <button onclick="check(3, 'wrong')">Power (obviously wrong)</button>
+</div>
+
+<!-- STAGE 4 -->
+<div id="stage4" class="stage">
+    <h2>Question 4:</h2>
+    <p>“If Power has 3 cats, eats 1, steals 5, lies about 12…  
+       How many does she CLAIM she has?”</p>
+    <button onclick="check(4, 'wrong')">19</button>
+    <button onclick="check(4, 'correct')">20</button>
+    <button onclick="check(4, 'wrong')">69</button>
+</div>
+
+<!-- STAGE 5 -->
+<div id="stage5" class="stage">
+    <h2>FINAL QUESTION!</h2>
+    <p>“What is the sacred word of the Blood Fiend?!”</p>
+    <button onclick="check(5, 'correct')">Blood</button>
+    <button onclick="check(5, 'wrong')">Chainsaw</button>
+    <button onclick="check(5, 'wrong')">Banana</button>
+</div>
+
+<!-- Final Link -->
+<div id="final-link">
+    <p>BLEHHH!! Power vomits out the clue:</p>
+    <a href="YOUR_GOOGLE_DRIVE_LINK_HERE" style="color:#76ff76;" target="_blank">
+        👉 Click here for the next clue!
+    </a>
+</div>
+
+<script>
+let current = 1;
+
+function check(stage, result) {
+    if (result === 'correct') {
+        document.getElementById("stage" + stage).style.display = "none";
+        current++;
+        if (current <= 5) {
+            document.getElementById("stage" + current).style.display = "block";
+        } else {
+            document.getElementById("final-link").style.display = "block";
+        }
+    } else {
+        alert("WRONG!! Power smacks you on the head. Try again!");
+    }
+}
+
+document.getElementById("stage1").style.display = "block";
+</script>
+
+</body>
+</html>
